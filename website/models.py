@@ -11,7 +11,7 @@ class Note(db.Model):
     user_ID = db.Column(db.Integer, db.ForeignKey('user.ID'))
 
 class User(db.Model,UserMixin):
-    ID = db.Column(db.Integer, primary_key=True)
+    ID = db.Column(db.String(20), primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     Name = db.Column(db.String(150))
