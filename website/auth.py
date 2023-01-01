@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import logging
 
+=======
+>>>>>>> main
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from .models import User
 from . import db
@@ -11,14 +14,21 @@ auth = Blueprint('auth', __name__)
 @auth.route('/Login', methods=['GET', 'POST'])
 def Login():
     if request.method == 'POST':
+<<<<<<< HEAD
         role = request.form.get('role')
+=======
+>>>>>>> main
         ID = request.form.get('ID')
         password = request.form.get('password')
         user = User.query.filter_by(ID=ID).first()
         if user:
             # if check_password_hash(user.password, password):
+<<<<<<< HEAD
             if user.password == password :
 
+=======
+            if user.password == password:
+>>>>>>> main
                 flash('Logged in successfully!', category='success')
                 # user.is_active = True
                 # user.get_id = ID
@@ -32,6 +42,7 @@ def Login():
                 # return redirect(url_for('views.home'))
                 # return render_template("home.html", user=current_user)
                 # return render_template("home.html", user_name=user.Name)
+<<<<<<< HEAD
                 if user.role == 'nurse':
                     return render_template("nurse.html")
                 elif user.role == 'medical secretary':
@@ -40,6 +51,9 @@ def Login():
                     return render_template("patient.html")
                 # else:
                 #     return render_template("home.html", user_name=user.Name, user_role=user.role)
+=======
+                return render_template("home.html", user_name=user.Name, user_role=user.role)
+>>>>>>> main
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -69,7 +83,10 @@ def Sign_up():
         Name = request.form.get('Name')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+<<<<<<< HEAD
         role = request.form.get('role')
+=======
+>>>>>>> main
         # if choose != "Medical staff" or choose !="patient":
         #      flash("Enter patient/ medical staff", category='error')
         if len(ID) != 9:
@@ -84,11 +101,16 @@ def Sign_up():
             #     flash("Passwords are not the same", category='error')
 
         else:
+<<<<<<< HEAD
             user = User(ID=ID, email=email, password=password1, Name=Name,role = role)
+=======
+            user = User(ID=ID, email=email, password=password1, Name=Name)
+>>>>>>> main
             db.session.add(user)
             db.session.commit()
             flash("User created successfully!", category='success')
     return render_template("sign_up.html")
+<<<<<<< HEAD
 
 @auth.route('/nurse', methods=['GET', 'POST'])
 def Nurse():
@@ -107,3 +129,5 @@ def Nurse():
 
 
 
+=======
+>>>>>>> main

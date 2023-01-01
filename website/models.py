@@ -20,7 +20,10 @@ class User(db.Model):
     Name = db.Column(db.String(150))
     role = db.Column(db.String(150))
     is_active_patient = db.Column(db.Integer)
+<<<<<<< HEAD
     n_action = db.Column(db.String(30))
+=======
+>>>>>>> main
 
 
 
