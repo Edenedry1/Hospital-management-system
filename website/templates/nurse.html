@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block title %} Nurse {%endblock %}
+{% block content %}<h1>Nurse</h1>
+<form method="POST" action="/nurse">
+    <h3 align="center">Nurse</h3>
+    <div class="form-group">
+        <label for="n_action">action </label>
+        <input
+                type="n_action"
+                class="form-control"
+                id="n_action"
+                name="n_action"
+                placeholder="Enter number of action ">
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">send</button>
+</form>
+{%endblock%}
