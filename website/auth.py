@@ -1,8 +1,11 @@
-
+import audioop
 import logging
+import os
 
 
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
+from werkzeug.utils import secure_filename, send_from_directory
+
 from .models import User
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -21,7 +24,7 @@ def Login():
         user = User.query.filter_by(ID=ID).first()
         if user:
             # if check_password_hash(user.password, password):
-            #if user.password == password :
+            # if user.password == password :
 
             if user.password == password:
                 flash('Logged in successfully!', category='success')
@@ -66,6 +69,7 @@ def Logout():
     session['user_name'] = 'Guest'
     return redirect(url_for('auth.login'))
 
+
 @auth.route('/Sign_up', methods=['GET', 'POST'])
 def Sign_up():
     if request.method == 'POST':
@@ -75,6 +79,7 @@ def Sign_up():
         Name = request.form.get('Name')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        approval = request.form.get('approval')
 
         role = request.form.get('role')
 
@@ -90,12 +95,11 @@ def Sign_up():
             #
             # elif password1 != password2:
             #     flash("Passwords are not the same", category='error')
-
+        elif approval != 'yes':
+            flash("It is not possible to register without approval of the terms of use", category='error')
         else:
 
-            user = User(ID=ID, email=email, password=password1, Name=Name,role = role)
-
-            user = User(ID=ID, email=email, password=password1, Name=Name)
+            user = User(ID=ID, email=email, password=password1, Name=Name, role=role)
 
             db.session.add(user)
             db.session.commit()
@@ -105,18 +109,16 @@ def Sign_up():
 
 @auth.route('/nurse', methods=['GET', 'POST'])
 def Nurse():
-    #this functuon is still not good, we need to work on it
+    # this functuon is still not good, we need to work on it
     n_action = request.form.get('n_action')
     user = User(n_action=n_action)
-    #db.session.add(user)
-    #logging.ERROR('0')
+    # db.session.add(user)
+    # logging.ERROR('0')
     if user.n_action == '1':
         db.session.commit()
-        #logging.ERROR('1')
+        # logging.ERROR('1')
         return render_template("patients.html")
-    #flash("home", category='success')
+    # flash("home", category='success')
     return render_template("nurse.html")
-
-
 
 

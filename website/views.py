@@ -36,10 +36,5 @@ def home2():
 def patients():
     return render_template("patients.html", patients=User.query.all())
 
-<<<<<<< HEAD
-# @views.route('/nurse')
-# def nurse():
-#     return render_template("nurse.html",n_action=User.query.all())
-=======
 
->>>>>>> main
+
