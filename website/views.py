@@ -7,7 +7,9 @@ from flask_login import login_user, login_required, logout_user, current_user
 # from flask_login import login_required,current_user
 
 
-views = Blueprint('views',__name__)
+views = Blueprint('views', __name__)
+
+
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
@@ -35,6 +37,3 @@ def home2():
 @views.route('/patients')
 def patients():
     return render_template("patients.html", patients=User.query.all())
-
-
-

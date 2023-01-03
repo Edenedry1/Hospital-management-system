@@ -20,7 +20,7 @@ class User(db.Model):
     Name = db.Column(db.String(150))
     role = db.Column(db.String(150))
     is_active_patient = db.Column(db.Integer)
-    allergy = db.Column(db.String(150))
+    # allergy = db.Column(db.String(150))
 
 
 
