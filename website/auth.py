@@ -1,11 +1,8 @@
-import audioop
+
 import logging
-import os
 
 
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
-from werkzeug.utils import secure_filename, send_from_directory
-
 from .models import User
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -24,13 +21,19 @@ def Login():
         user = User.query.filter_by(ID=ID).first()
         if user:
             # if check_password_hash(user.password, password):
-            # if user.password == password :
+            #if user.password == password :
 
             if user.password == password:
-                flash('Logged in successfully!', category='success')
+
                 # user.is_active = True
                 # user.get_id = ID
                 # login_user(user, remember=True)
+
+                # user = User(ID=ID, email=email, password=password1, Name=Name, role=role, question=question)
+                #db.session.add(user)
+                # db.session.commit()
+                max_place_in_queue = db.session.query(db.func.max(user.place_in_queue)).first()
+                flash('Logged in successfully! place in queue = ' + str(max_place_in_queue), category='success')
 
                 # session['user'] = user
                 session['user_id'] = user.ID
@@ -80,9 +83,8 @@ def Sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         approval = request.form.get('approval')
-
         role = request.form.get('role')
-
+        question =  request.form.get('question')
         # if choose != "Medical staff" or choose !="patient":
         #      flash("Enter patient/ medical staff", category='error')
         if len(ID) != 9:
@@ -97,9 +99,12 @@ def Sign_up():
             #     flash("Passwords are not the same", category='error')
         elif approval != 'yes':
             flash("It is not possible to register without approval of the terms of use", category='error')
+
         else:
 
-            user = User(ID=ID, email=email, password=password1, Name=Name, role=role)
+            user = User(ID=ID, email=email, password=password1, Name=Name,role = role,question = question)
+
+           # user = User(ID=ID, email=email, password=password1, Name=Name)
 
             db.session.add(user)
             db.session.commit()
@@ -109,16 +114,32 @@ def Sign_up():
 
 @auth.route('/nurse', methods=['GET', 'POST'])
 def Nurse():
-    # this functuon is still not good, we need to work on it
-    n_action = request.form.get('n_action')
-    user = User(n_action=n_action)
-    # db.session.add(user)
-    # logging.ERROR('0')
-    if user.n_action == '1':
-        db.session.commit()
-        # logging.ERROR('1')
-        return render_template("patients.html")
-    # flash("home", category='success')
-    return render_template("nurse.html")
+    #this functuon is still not good, we need to work on it
+    if request.method == 'POST':
+        n_action = request.form.get('n_action')
+        user = User(n_action=n_action)
+        # db.session.add(user)
+        # logging.ERROR('0')
+        if user.n_action == '1':
+            db.session.commit()
+            # logging.ERROR('1')
+            # return render_template("patients.html")
+            return redirect(url_for('views.patients'))
+        # flash("home", category='success')
+        return render_template("nurse.html")
 
 
+@auth.route('/button')
+def button():
+    return 'Button pressed!'
+
+# @auth.route('/patient', methods=['GET', 'POST'])
+# def patient():
+#     if request.method == 'POST':
+#
+#
+#     return render_template("patient.html")
+# #
+# #
+# #
+#
