@@ -13,9 +13,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/Login', methods=['GET', 'POST'])
 def Login():
     if request.method == 'POST':
-
         role = request.form.get('role')
-
         ID = request.form.get('ID')
         password = request.form.get('password')
         user = User.query.filter_by(ID=ID).first()
@@ -127,7 +125,20 @@ def Nurse():
             return redirect(url_for('views.patients'))
         # flash("home", category='success')
         return render_template("nurse.html")
-
+# @auth.route('secretary', methods=['GET', 'POST'])
+# def Secretary():
+#     if request.method == 'POST':
+#         s_action = request.form.get('s_action')
+#         user = User(s_action=s_action)
+#         # db.session.add(user)
+#         # logging.ERROR('0')
+#         if user.s_action == 'patients':
+#             db.session.commit()
+#             # logging.ERROR('1')
+#             # return render_template("patients.html")
+#             return redirect(url_for('views.patients'))
+#         # flash("home", category='success')
+#         return render_template("medical_secretary.html")
 
 @auth.route('/button')
 def button():
