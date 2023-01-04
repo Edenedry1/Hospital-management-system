@@ -25,6 +25,8 @@ class User(db.Model):
     answer = db.Column(db.String(30))
     reason = db.Column(db.String(200))
     place_in_queue = db.Column(db.Integer)
+    s_action = db.Column(db.String(20))
+
 
 
 
