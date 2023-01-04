@@ -84,7 +84,7 @@ def Sign_up():
         password2 = request.form.get('password2')
         approval = request.form.get('approval')
         role = request.form.get('role')
-        question =  request.form.get('question')
+        answer =  request.form.get('answer')
         # if choose != "Medical staff" or choose !="patient":
         #      flash("Enter patient/ medical staff", category='error')
         if len(ID) != 9:
@@ -102,7 +102,7 @@ def Sign_up():
 
         else:
 
-            user = User(ID=ID, email=email, password=password1, Name=Name,role = role,question = question)
+            user = User(ID=ID, email=email, password=password1, Name=Name,role = role,answer = answer)
 
            # user = User(ID=ID, email=email, password=password1, Name=Name)
 
