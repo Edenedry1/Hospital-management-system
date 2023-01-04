@@ -84,7 +84,7 @@ def Sign_up():
         password2 = request.form.get('password2')
         approval = request.form.get('approval')
         role = request.form.get('role')
-        answer =  request.form.get('answer')
+        question =  request.form.get('question')
         # if choose != "Medical staff" or choose !="patient":
         #      flash("Enter patient/ medical staff", category='error')
         if len(ID) != 9:
@@ -102,7 +102,7 @@ def Sign_up():
 
         else:
 
-            user = User(ID=ID, email=email, password=password1, Name=Name,role = role,answer = answer)
+            user = User(ID=ID, email=email, password=password1, Name=Name,role = role,question = question)
 
            # user = User(ID=ID, email=email, password=password1, Name=Name)
 
@@ -133,13 +133,20 @@ def Nurse():
 def button():
     return 'Button pressed!'
 
-# @auth.route('/patient', methods=['GET', 'POST'])
-# def patient():
-#     if request.method == 'POST':
+@auth.route('/patient', methods=['GET', 'POST'])
+def patient():
+    if request.method == 'POST':
+        ID = request.form.get('ID')
+        allergy = request.form.get('allergy')
+        reason = request.form.get('reason')
+        user = User.query.filter_by(ID=ID).first()
+        user.allergy = allergy
+        db.session.commit()
+        user.reason = reason
+        db.session.commit()
+
+    return render_template("patient.html")
 #
 #
-#     return render_template("patient.html")
-# #
-# #
-# #
 #
+

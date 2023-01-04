@@ -40,7 +40,7 @@ def patients():
         flash("patient_id = "+patient_id)
         print("received patient_id=" + patient_id)
         user = User.query.filter_by(ID=patient_id).first()
-        #user = User.query.filter_by(ID=patient_id).first()
+        # user = User.query.filter_by(ID=patient_id).first()
         user.place_in_queue = user.place_in_queue - 1
         db.session.commit()
 
