@@ -144,13 +144,17 @@ def Secretary():
 def button():
     return 'Button pressed!'
 
-# @auth.route('/patient', methods=['GET', 'POST'])
-# def patient():
-#     if request.method == 'POST':
-#
-#
-#     return render_template("patient.html")
-# #
-# #
-# #
-#
+@auth.route('/patient', methods=['GET', 'POST'])
+def patient():
+    if request.method == 'POST':
+        ID = request.form.get('ID')
+        allergy = request.form.get('allergy')
+        reason = request.form.get('reason')
+        user = User.query.filter_by(ID=ID).first()
+        user.allergy = allergy
+        db.session.commit()
+        user.reason = reason
+        db.session.commit()
+    return render_template("patient.html")
+
+
