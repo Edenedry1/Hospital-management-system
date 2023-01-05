@@ -22,9 +22,12 @@ class User(db.Model):
     is_active_patient = db.Column(db.Integer)
     allergy = db.Column(db.String(150))
     n_action = db.Column(db.String(30))
-    question = db.Column(db.String(30))
+    answer = db.Column(db.String(30))
     reason = db.Column(db.String(200))
     place_in_queue = db.Column(db.Integer)
+    s_action = db.Column(db.String(20))
+    is_approved = db.Column(db.Integer)
+
 
 
 

@@ -13,9 +13,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/Login', methods=['GET', 'POST'])
 def Login():
     if request.method == 'POST':
-
         role = request.form.get('role')
-
         ID = request.form.get('ID')
         password = request.form.get('password')
         user = User.query.filter_by(ID=ID).first()
@@ -84,7 +82,7 @@ def Sign_up():
         password2 = request.form.get('password2')
         approval = request.form.get('approval')
         role = request.form.get('role')
-        question =  request.form.get('question')
+        answer =  request.form.get('answer')
         # if choose != "Medical staff" or choose !="patient":
         #      flash("Enter patient/ medical staff", category='error')
         if len(ID) != 9:
@@ -102,7 +100,7 @@ def Sign_up():
 
         else:
 
-            user = User(ID=ID, email=email, password=password1, Name=Name,role = role,question = question)
+            user = User(ID=ID, email=email, password=password1, Name=Name,role = role,answer = answer)
 
            # user = User(ID=ID, email=email, password=password1, Name=Name)
 
@@ -114,7 +112,6 @@ def Sign_up():
 
 @auth.route('/nurse', methods=['GET', 'POST'])
 def Nurse():
-    #this functuon is still not good, we need to work on it
     if request.method == 'POST':
         n_action = request.form.get('n_action')
         user = User(n_action=n_action)
@@ -128,6 +125,20 @@ def Nurse():
         # flash("home", category='success')
         return render_template("nurse.html")
 
+@auth.route('/Secretary', methods=['GET', 'POST'])
+def Secretary():
+     if request.method == 'POST':
+         s_action = request.form.get('s_action')
+         user = User(s_action=s_action)
+         # db.session.add(user)
+         # logging.ERROR('0')
+         if user.s_action == '2':
+             db.session.commit()
+             # logging.ERROR('1')
+             #return render_template("patients.html")
+             return redirect(url_for('views.patients_for_secretary'))
+         # flash("home", category='success')
+         return render_template("medical_secretary.html")
 
 @auth.route('/button')
 def button():
@@ -144,9 +155,6 @@ def patient():
         db.session.commit()
         user.reason = reason
         db.session.commit()
-
     return render_template("patient.html")
-#
-#
-#
+
 
