@@ -28,8 +28,10 @@
                 id="reason" name="reason"
                 placeholder="Enter the reason that make you to be here">
     </div>
-     <br/>
-    <button type="submit" class="btn btn-primary" name="submit">send</button>
+    <br/>
+        <h4> {{ message }} </h4>
+    <br/>
+    <button type="submit" class="btn btn-primary" name="submit" onclick="return confirm('Are you sure?')">send</button>
     <button type="submit" name="cancel" class="btn btn-secondary">cancel</button>
     <input type="file" name="file">
     <input type="submit" value="Upload" name="upload">

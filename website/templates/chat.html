@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% extends "base.html" %} {% block title %} Home {% endblock %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% for message in messages %}
+    <div>
+      <textarea> {{ message.employee_id }}</textarea>
+      <textarea> {{ message.content }}</textarea>
+    </div>
+    {% endfor %}
+    <form method="POST" enctype="multipart/form-data" action="/chat">
+    <div class="form-group">
+        <label for="ID"> ID </label>
+        <input
+                type="text"
+                class="form-control"
+                id="ID" name="ID"
+                placeholder="Enter your ID">
+    </div>
+    <div class="form-group">
+        <label for="content"> Message </label>
+        <input
+                type="text"
+                class="form-control"
+                id="content" name="content"
+                placeholder="Enter message content">
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+</body>
+</html>
+{% endblock %}
