@@ -27,8 +27,12 @@ class User(db.Model):
     place_in_queue = db.Column(db.Integer)
     s_action = db.Column(db.String(20))
     is_approved = db.Column(db.Integer)
+    message = db.Column(db.String(200))
 
-
+class Chat(db.Model):
+    message_id = db.Column(db.Integer, primary_key=True)
+    employee_id = db.Column(db.Integer)
+    content = db.Column(db.String(200))
 
 
 

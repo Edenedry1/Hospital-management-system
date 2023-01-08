@@ -51,7 +51,9 @@ def Login():
                 elif user.role == 'medical secretary':
                     return render_template("medical_secretary.html")
                 elif user.role == 'patient':
-                    return render_template("patient.html", user_name=user.Name)
+                    return render_template("patient.html",
+                                           user_name=user.Name,
+                                           message=user.message or "No new messages")
                 # else:
                 #     return render_template("home.html", user_name=user.Name, user_role=user.role)
                 return render_template("home.html", user_name=user.Name, user_role=user.role)
@@ -126,6 +128,8 @@ def Nurse():
             # logging.ERROR('1')
             # return render_template("patients.html")
             return redirect(url_for('views.patients'))
+        elif user.n_action == '3':
+            return redirect(url_for('views.chat'))
         # flash("home", category='success')
         return render_template("nurse.html")
 
@@ -141,6 +145,8 @@ def Secretary():
              # logging.ERROR('1')
              #return render_template("patients.html")
              return redirect(url_for('views.patients_for_secretary'))
+         elif user.s_action == '3':
+             return redirect(url_for("views.add_message_for_patient"))
          # flash("home", category='success')
          return render_template("medical_secretary.html")
 
@@ -158,8 +164,8 @@ def patient():
             allergy = request.form.get('allergy')
             reason = request.form.get('reason')
             user = User.query.filter_by(ID=ID).first()
+            user.message = ""
             user.allergy = allergy
-            db.session.commit()
             user.reason = reason
             db.session.commit()
         elif 'cancel' in request.form.keys():
@@ -167,8 +173,38 @@ def patient():
             user.is_active_patient = 0
             db.session.commit()
         elif 'upload' in request.form.keys():
+            user = User.query.filter_by(ID=ID).one()
+            user.message = ""
+            db.session.commit()
             content = request.files['file'].stream.read()
-            file_name = request.files['file'].filename
-            with open(fr'{dirname(__file__)}\patient_files\{ID}', 'wb') as f:
-                f.write(content)
-    return render_template("patient.html", user_name=user.Name if user else None)
+            if request.files['file'].filename.endswith('.pdf'):
+                with open(fr'{dirname(__file__)}\static\{ID}.pdf', 'wb') as f:
+                    f.write(content)
+    return render_template("patient.html",
+                           user_name=user.Name if user else None,
+                           message=user.message or "No new messages." if user else None)
+
+@auth.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        patient_id = request.form['ID']
+        password = request.form['New password']
+        answer = request.form['security qustion']
+        user = db.session.query(User)\
+            .filter(User.ID == patient_id)\
+            .one()
+        if user and user.answer == answer:
+            user.password = password
+            db.session.commit()
+            return redirect(url_for('auth.Login'))
+        elif not user:
+            # Handle wrong ID
+            pass
+        elif user.answer is None:
+            # Handle no answer
+            pass
+        else:
+            # Handle incorrect answer
+            pass
+    return render_template("forgot_password.html")
+
