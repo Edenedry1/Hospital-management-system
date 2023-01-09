@@ -120,15 +120,13 @@ def Sign_up():
 def Nurse():
     if request.method == 'POST':
         n_action = request.form.get('n_action')
-        user = User(n_action=n_action)
         # db.session.add(user)
         # logging.ERROR('0')
-        if user.n_action == '1':
-            db.session.commit()
+        if n_action == '1':
             # logging.ERROR('1')
             # return render_template("patients.html")
             return redirect(url_for('views.patients'))
-        elif user.n_action == '3':
+        elif n_action == '3':
             return redirect(url_for('views.chat'))
         # flash("home", category='success')
         return render_template("nurse.html")
@@ -137,15 +135,13 @@ def Nurse():
 def Secretary():
      if request.method == 'POST':
          s_action = request.form.get('s_action')
-         user = User(s_action=s_action)
          # db.session.add(user)
          # logging.ERROR('0')
-         if user.s_action == '2':
-             db.session.commit()
+         if s_action == '2':
              # logging.ERROR('1')
              #return render_template("patients.html")
              return redirect(url_for('views.patients_for_secretary'))
-         elif user.s_action == '3':
+         elif s_action == '3':
              return redirect(url_for("views.add_message_for_patient"))
          # flash("home", category='success')
          return render_template("medical_secretary.html")
