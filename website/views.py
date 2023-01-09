@@ -37,7 +37,7 @@ def patients():
     print("In views.route(patients)")
     if request.method == 'POST':
         patient_id = request.form.get('patient_id')
-        if 'approve' in request.form.keys():
+        if 'move_up' in request.form.keys():
             flash("patient_id = " + patient_id)
             # print("received patient_id=" + patient_id)
             # user = User.query.filter_by(ID=patient_id).first()
