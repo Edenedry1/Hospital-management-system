@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from .models import User
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
+from os.path import dirname
 
 auth = Blueprint('auth', __name__)
 
@@ -22,7 +23,9 @@ def Login():
             #if user.password == password :
 
             if user.password == password:
-
+                if user.role == 'patient':
+                    user.is_active_patient = 1
+                    db.session.commit()
                 # user.is_active = True
                 # user.get_id = ID
                 # login_user(user, remember=True)
@@ -30,8 +33,10 @@ def Login():
                 # user = User(ID=ID, email=email, password=password1, Name=Name, role=role, question=question)
                 #db.session.add(user)
                 # db.session.commit()
-                max_place_in_queue = db.session.query(db.func.max(user.place_in_queue)).first()
-                flash('Logged in successfully! place in queue = ' + str(max_place_in_queue), category='success')
+                if user.is_approved:
+                    flash('Logged in successfully! place in queue is {}'.format(user.place_in_queue),
+                          category='success')
+                # max_place_in_queue = db.session.query(db.func.max(user.place_in_queue)).first()
 
                 # session['user'] = user
                 session['user_id'] = user.ID
@@ -46,7 +51,9 @@ def Login():
                 elif user.role == 'medical secretary':
                     return render_template("medical_secretary.html")
                 elif user.role == 'patient':
-                    return render_template("patient.html")
+                    return render_template("patient.html",
+                                           user_name=user.Name,
+                                           message=user.message or "No new messages")
                 # else:
                 #     return render_template("home.html", user_name=user.Name, user_role=user.role)
                 return render_template("home.html", user_name=user.Name, user_role=user.role)
@@ -82,7 +89,7 @@ def Sign_up():
         password2 = request.form.get('password2')
         approval = request.form.get('approval')
         role = request.form.get('role')
-        answer =  request.form.get('answer')
+        answer = request.form.get('answer')
         # if choose != "Medical staff" or choose !="patient":
         #      flash("Enter patient/ medical staff", category='error')
         if len(ID) != 9:
@@ -97,10 +104,9 @@ def Sign_up():
             #     flash("Passwords are not the same", category='error')
         elif approval != 'yes':
             flash("It is not possible to register without approval of the terms of use", category='error')
-
         else:
-
-            user = User(ID=ID, email=email, password=password1, Name=Name,role = role,answer = answer)
+            user = User(ID=ID, email=email, password=password1, Name=Name, role=role, answer=answer,
+                        is_active_patient=0, is_approved=0, place_in_queue=0)
 
            # user = User(ID=ID, email=email, password=password1, Name=Name)
 
@@ -122,6 +128,8 @@ def Nurse():
             # logging.ERROR('1')
             # return render_template("patients.html")
             return redirect(url_for('views.patients'))
+        elif user.n_action == '3':
+            return redirect(url_for('views.chat'))
         # flash("home", category='success')
         return render_template("nurse.html")
 
@@ -137,6 +145,8 @@ def Secretary():
              # logging.ERROR('1')
              #return render_template("patients.html")
              return redirect(url_for('views.patients_for_secretary'))
+         elif user.s_action == '3':
+             return redirect(url_for("views.add_message_for_patient"))
          # flash("home", category='success')
          return render_template("medical_secretary.html")
 
@@ -146,15 +156,55 @@ def button():
 
 @auth.route('/patient', methods=['GET', 'POST'])
 def patient():
+    user = None
     if request.method == 'POST':
         ID = request.form.get('ID')
-        allergy = request.form.get('allergy')
-        reason = request.form.get('reason')
-        user = User.query.filter_by(ID=ID).first()
-        user.allergy = allergy
-        db.session.commit()
-        user.reason = reason
-        db.session.commit()
-    return render_template("patient.html")
+        user = User.query.filter_by(ID=ID).one()
+        if 'submit' in request.form.keys():
+            allergy = request.form.get('allergy')
+            reason = request.form.get('reason')
+            user = User.query.filter_by(ID=ID).first()
+            user.message = ""
+            user.allergy = allergy
+            user.reason = reason
+            db.session.commit()
+        elif 'cancel' in request.form.keys():
+            user = User.query.filter_by(ID=ID).one()
+            user.is_active_patient = 0
+            db.session.commit()
+        elif 'upload' in request.form.keys():
+            user = User.query.filter_by(ID=ID).one()
+            user.message = ""
+            db.session.commit()
+            content = request.files['file'].stream.read()
+            if request.files['file'].filename.endswith('.pdf'):
+                with open(fr'{dirname(__file__)}\static\{ID}.pdf', 'wb') as f:
+                    f.write(content)
+    return render_template("patient.html",
+                           user_name=user.Name if user else None,
+                           message=user.message or "No new messages." if user else None)
 
+@auth.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        patient_id = request.form['ID']
+        password = request.form['New password']
+        answer = request.form['security qustion']
+        user = db.session.query(User)\
+            .filter(User.ID == patient_id)\
+            .one()
+        if user and user.answer == answer:
+            user.password = password
+            db.session.commit()
+            return redirect(url_for('auth.Login'))
+        elif not user:
+            # Handle wrong ID
+            pass
+        elif user.answer is None:
+            # Handle no answer
+            pass
+        else:
+            # Handle incorrect answer
+            pass
+    return render_template("forgot_password.html")
 
