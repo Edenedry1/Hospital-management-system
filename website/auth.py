@@ -163,22 +163,43 @@ def patient():
             user.message = ""
             user.allergy = allergy
             user.reason = reason
+            user.is_approved = 0
+            user.place_in_queue = 0
             db.session.commit()
         elif 'cancel' in request.form.keys():
             user = User.query.filter_by(ID=ID).one()
             user.is_active_patient = 0
+            user.is_approved = 0
+            user.place_in_queue = 0
             db.session.commit()
         elif 'upload' in request.form.keys():
             user = User.query.filter_by(ID=ID).one()
             user.message = ""
+            user.is_approved = 0
+            user.place_in_queue = 0
             db.session.commit()
             content = request.files['file'].stream.read()
             if request.files['file'].filename.endswith('.pdf'):
                 with open(fr'{dirname(__file__)}\static\{ID}.pdf', 'wb') as f:
                     f.write(content)
+        reset_queue()
     return render_template("patient.html",
                            user_name=user.Name if user else None,
                            message=user.message or "No new messages." if user else None)
+
+
+def reset_queue():
+    users = db.session.query(User)\
+        .filter(User.role == 'patient')\
+        .filter(User.is_approved == 1)\
+        .order_by(db.asc(User.place_in_queue))\
+        .all()
+    counter = 0
+    for user in users:
+        counter += 1
+        user.place_in_queue = counter
+    db.session.commit()
+
 
 @auth.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
