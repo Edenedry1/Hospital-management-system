@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %} Home {%endblock %}
 {% block content %}
-<h1>{{user_name}} ({{user_role}}), Welcome back our patient</h1>
-<form method="POST" action="/patient">
+<h1>{{user_name}}, Welcome back our patient</h1>
+<form method="POST" enctype="multipart/form-data" action="/patient">
     <div class="form-group">
         <label for="ID"> ID </label>
         <input
@@ -28,16 +28,16 @@
                 id="reason" name="reason"
                 placeholder="Enter the reason that make you to be here">
     </div>
-     <br/>
-    <button type="submit" class="btn btn-primary">send</button>
-</form>
-<form method="POST" enctype="multipart/form-data">
-  <input type="file" name="file">
-  <input type="submit" value="Upload">
+    <br/>
+        <h4> {{ message }} </h4>
+    <br/>
+    <button type="submit" class="btn btn-primary" name="submit" onclick="return confirm('Are you sure?')">send</button>
+    <button type="submit" name="cancel" class="btn btn-secondary">cancel</button>
+    <input type="file" name="file">
+    <input type="submit" value="Upload" name="upload">
+</div>
 </form>
 
-</form>
-{%endblock%}
 
 
 {%endblock%}
