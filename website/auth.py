@@ -60,7 +60,7 @@ def Login():
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
-            flash('Email does not exist.', category='error')
+            flash('ID does not exist.', category='error')
 
     # return render_template("login.html", user_name="Guest")
     return render_template("login.html")
