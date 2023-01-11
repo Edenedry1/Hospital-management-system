@@ -1,9 +1,9 @@
 {% extends "base.html" %} {% block title %} Nurse {%endblock %}
 {% block content %}<h1>Welcome back Nurse</h1>
 <form method="POST" action="/nurse">
-    <h3 align="center">Nurse</h3>
     <div class="form-group">
-        <label for="n_action">action </label>
+        <label for="n_action">
+ </label>
         <input
                 type="n_action"
                 class="form-control"
@@ -12,6 +12,10 @@
                 placeholder="Enter number of action ">
     </div>
     <br/>
+        <h8>*For list of patients - Press 1</h8>
+       <p><h8>*To consult with colleagues - Press 2</h8></p>
+    <br/>
     <button type="submit" class="btn btn-primary">send</button>
 </form>
 {%endblock%}
+

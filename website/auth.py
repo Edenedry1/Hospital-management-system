@@ -126,7 +126,7 @@ def Nurse():
             # logging.ERROR('1')
             # return render_template("patients.html")
             return redirect(url_for('views.patients'))
-        elif n_action == '3':
+        elif n_action == '2':
             return redirect(url_for('views.chat'))
         # flash("home", category='success')
         return render_template("nurse.html")
