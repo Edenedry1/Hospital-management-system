@@ -1,16 +1,15 @@
 {% extends "base.html" %} {% block title %} Home {%endblock %}
-{% block content %}
-<h1>{{user_name}}, Welcome back our patient</h1>
+{% block content %}<h4> Patient </h4>
+<h1> Welcome back {{user_name}} </h1>
 <form method="POST" enctype="multipart/form-data" action="/patient">
     <div class="form-group">
-        <label for="ID"> ID </label>
+        <label for="Pleas enter ID again for information security"> ID </label>
         <input
-                type="ID"
+                type="Pleas enter ID again for information security"
                 class="form-control"
-                id="ID" name="ID"
-                placeholder="Enter ID">
+                id="Pleas enter ID again for information security" name="Pleas enter ID again for information security"
+                placeholder="Pleas enter ID again for information security">
     </div>
-<h1>Welcome back!</h1>
 <div>
     <div class="form-group">
         <label for="allergy"> allergy </label>
@@ -37,7 +36,4 @@
     <input type="submit" value="Upload" name="upload">
 </div>
 </form>
-
-
-
 {%endblock%}
